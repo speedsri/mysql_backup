@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Backup</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-r from-blue-50 to-purple-50 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Database Backup</h1>
+        
+        <!-- Dropdown to select database -->
+        <div class="mb-6">
+            <label for="database" class="block text-sm font-medium text-gray-700 mb-2">Select Database</label>
+            <div class="relative">
+                <select id="database" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none">
+                    <option value="">Loading databases...</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Backup Button -->
+        <button id="backupBtn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300">
+            <i class="fas fa-download mr-2"></i> Download Backup
+        </button>
+
+        <!-- Status Message -->
+        <div id="status" class="mt-6 text-center text-gray-600">
+            <i class="fas fa-info-circle mr-2"></i> Select a database to start backup.
+        </div>
+
+        <!-- Loading Spinner (Hidden by default) -->
+        <div id="loading" class="hidden mt-6 text-center">
+            <div class="inline-flex items-center">
+                <i class="fas fa-spinner fa-spin text-blue-600 mr-2"></i>
+                <span class="text-gray-700">Backing up database...</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fetch database names from the server
+        fetch('get_databases.php')
+            .then(response => response.json())
+            .then(data => {
+                const select = document.getElementById('database');
+                select.innerHTML = ''; // Clear the loading message
+
+                // Add a default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select a database';
+                select.appendChild(defaultOption);
+
+                // Add database options
+                data.forEach(db => {
+                    const option = document.createElement('option');
+                    option.value = db;
+                    option.textContent = db;
+                    select.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching databases:', error);
+                document.getElementById('database').innerHTML = '<option value="">Failed to load databases</option>';
+            });
+
+        // Handle backup button click
+        document.getElementById('backupBtn').addEventListener('click', function() {
+            const database = document.getElementById('database').value;
+            if (!database) {
+                alert('Please select a database.');
+                return;
+            }
+
+            const status = document.getElementById('status');
+            const loading = document.getElementById('loading');
+
+            // Show loading spinner and update status
+            status.classList.add('hidden');
+            loading.classList.remove('hidden');
+
+            fetch(`backup.php?database=${database}`)
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${database}_backup.sql`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+
+                    // Update status and hide loading spinner
+                    status.textContent = 'Backup downloaded successfully!';
+                    status.classList.remove('hidden');
+                    loading.classList.add('hidden');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    status.textContent = 'Failed to download backup.';
+                    status.classList.remove('hidden');
+                    loading.classList.add('hidden');
+                });
+        });
+    </script>
+</body>
+</html>
