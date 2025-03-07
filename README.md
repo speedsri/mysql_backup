@@ -4,15 +4,15 @@
 ![Database Backup Banner](https://github.com/speedsri/mysql_backup/blob/main/sql_backup2.png)
 
 ## 📑 Table of Contents
-- [Overview](#overview)
-- [System Requirements](#system-requirements)
-- [Installation Guide](#installation-guide)
-- [File Structure](#file-structure)
-- [How It Works](#how-it-works)
-- [Configuration](#configuration)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
+- [Overview](#-overview)
+- [System Requirements](#-system-requirements)
+- [Installation Guide](#-installation-guide)
+- [File Structure](#-file-structure)
+- [How It Works](#-how-it-works)
+- [Configuration](#-configuration)
+- [Troubleshooting](#-troubleshooting)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ## 📋 Overview
 
