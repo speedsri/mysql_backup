@@ -1,7 +1,7 @@
 # MySQL Database Backup System
 ## Documentation and Installation Guide
 
-![Database Backup Banner](https://github.com/username/mysql-backup-system/blob/main/img/banner.png)
+![Database Backup Banner](https://github.com/speedsri/mysql_backup/blob/main/sql_backup2.png)
 
 ## 📑 Table of Contents
 - [Overview](#overview)
